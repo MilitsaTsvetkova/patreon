@@ -1,6 +1,5 @@
 "use client";
 import { ExternalLinkIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "../trpc/react";
@@ -9,6 +8,8 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
+import { createClient } from "../utils/supabase/client";
+import uploadFile from "../lib/uploadFile";
 
 type Props = {
   profile: NonNullable<RouterOutputs["profile"]["getCreatorProfile"]>;
@@ -16,6 +17,7 @@ type Props = {
 
 const CreatorProfile = ({ profile }: Props) => {
   const router = useRouter();
+  const supabase = createClient();
   const updateProfile = api.profile.updateProfile.useMutation({
     onSuccess: () => {
       router.refresh();
@@ -32,6 +34,25 @@ const CreatorProfile = ({ profile }: Props) => {
       username,
       about,
     });
+  };
+
+  const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = await uploadFile(supabase, file, "avatars");
+      updateProfile.mutate({
+        avatar_url: url,
+      });
+    }
+  };
+  const uploadCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = await uploadFile(supabase, file, "covers");
+      updateProfile.mutate({
+        cover_url: url,
+      });
+    }
   };
   return (
     <Card>
@@ -103,12 +124,13 @@ const CreatorProfile = ({ profile }: Props) => {
                   }
                 />
               </Avatar>
-              <Input
+              <input
                 type="file"
                 name="avatar_url"
                 id="avatar_url"
                 className="hidden"
                 accept="image/*"
+                onChange={uploadAvatar}
               />
               <Button
                 type="button"
@@ -126,7 +148,7 @@ const CreatorProfile = ({ profile }: Props) => {
                 Cover image (1600px x 400px)
               </p>
               {profile.cover_url ? (
-                <Image
+                <img
                   src={profile.cover_url}
                   className="object-fit h-[200px] w-auto rounded-lg"
                   alt="cover image"
@@ -134,12 +156,13 @@ const CreatorProfile = ({ profile }: Props) => {
               ) : (
                 <div className="h-[200px] w-full rounded-lg bg-gray-100"></div>
               )}
-              <Input
+              <input
                 type="file"
                 name="cover_url"
                 id="cover_url"
                 className="hidden"
                 accept="image/*"
+                onChange={uploadCover}
               />
               <Button
                 type="button"
