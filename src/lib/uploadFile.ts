@@ -12,7 +12,9 @@ export default async function uploadFile(
   const { data: uploaded } = await supabase.storage
     .from(bucket)
     .upload(name, file);
-  const { data } = supabase.storage.from(bucket).getPublicUrl(uploaded?.path!);
+  const { data } = await supabase.storage
+    .from(bucket)
+    .getPublicUrl(uploaded?.path!);
   return data.publicUrl;
 }
 
