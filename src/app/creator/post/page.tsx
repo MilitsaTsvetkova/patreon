@@ -7,6 +7,8 @@ import {
   TabsTrigger,
 } from "../../../components/ui/tabs";
 import TextPost from "../../../components/TextPost";
+import ImagePost from "../../../components/ImagePost";
+import VideoPost from "../../../components/VideoPost";
 
 const PostPage = () => {
   return (
@@ -26,8 +28,12 @@ const PostPage = () => {
           <TabsContent value="text">
             <TextPost />
           </TabsContent>
-          <TabsContent value="image">Image</TabsContent>
-          <TabsContent value="video">Video</TabsContent>
+          <TabsContent value="image">
+            <ImagePost />
+          </TabsContent>
+          <TabsContent value="video">
+            <VideoPost />
+          </TabsContent>
         </CardContent>
       </Tabs>
     </Card>
