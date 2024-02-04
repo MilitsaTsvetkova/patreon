@@ -32,4 +32,12 @@ export const postRouter = createTRPCRouter({
         return true;
       }
     }),
+
+  getPosts: protectedProcedure.query(async ({ ctx }) => {
+    const { data: posts } = await ctx.da
+      .from("post")
+      .select("*, profile(*), comment(*), like(*)")
+      .order("created_at", { ascending: false });
+    return posts;
+  }),
 });
