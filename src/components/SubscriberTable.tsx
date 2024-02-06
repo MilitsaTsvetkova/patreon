@@ -1,4 +1,4 @@
-import { CheckCheckIcon } from "lucide-react";
+import { CheckCheckIcon, XCircleIcon } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -8,8 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { RouterOutputs } from "../trpc/shared";
+type Props = {
+  subscriptions: RouterOutputs["subscribe"]["getSubscriptions"];
+};
 
-const SubscriberTable = () => {
+const SubscriberTable = ({ subscriptions }: Props) => {
   return (
     <Table className="mt-6">
       <TableCaption>All current/past subscribers</TableCaption>
@@ -21,13 +25,19 @@ const SubscriberTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell>Tim Dillon</TableCell>
-          <TableCell>timdillon@gmail.com</TableCell>
-          <TableCell>
-            <CheckCheckIcon className="text-green-500" />
-          </TableCell>
-        </TableRow>
+        {subscriptions.map((subscription) => (
+          <TableRow key={subscription.id}>
+            <TableCell>{subscription.profile?.name}</TableCell>
+            <TableCell>{subscription.profile?.email}</TableCell>
+            <TableCell>
+              {subscription.active ? (
+                <CheckCheckIcon className="text-green-500" />
+              ) : (
+                <XCircleIcon className="text-red-500" />
+              )}
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );
