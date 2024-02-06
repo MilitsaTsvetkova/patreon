@@ -1,11 +1,9 @@
-import React, { use } from "react";
-import { Input } from "../../components/ui/input";
-import { Button } from "../../components/ui/button";
 import Link from "next/link";
-
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 import { cookies, headers } from "next/headers";
-import { createClient } from "../../utils/supabase/server";
 import { redirect } from "next/navigation";
+import { createClient } from "../../utils/supabase/server";
 type Props = {
   searchParams: {
     message?: string;

@@ -12,7 +12,13 @@ export const profileRouter = createTRPCRouter({
       .select("*")
       .eq("user_id", ctx.userId)
       .single();
-    return profile;
+    const { data: subscriptions } = await ctx.da
+      .from("subscription")
+      .select("*,profile!subscription_creator_profile_id_fkey(*)")
+      .eq("fan_profile_id", profile?.id!)
+      .eq("active", true)
+      .order("created_at", { ascending: false });
+    return { profile, subscriptions };
   }),
 
   updateProfile: protectedProcedure
