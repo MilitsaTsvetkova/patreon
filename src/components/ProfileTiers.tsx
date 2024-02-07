@@ -47,7 +47,7 @@ const ProfileTiers = ({ profile }: Props) => {
             Join
           </Button>
           <p>
-            Get complete access o all text, media and video posts for just
+            Get complete access of all text, media and video posts for just
             $5/month
           </p>
         </CardContent>
