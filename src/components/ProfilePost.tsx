@@ -1,3 +1,4 @@
+"use client";
 import {
   HeartIcon,
   ImageIcon,
@@ -16,6 +17,8 @@ import {
   CardFooter,
   CardHeader,
 } from "./ui/card";
+import { api } from "../trpc/react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   post: NonNullable<
@@ -25,6 +28,12 @@ type Props = {
 };
 
 const ProfilePost = ({ post, isSubscribed }: Props) => {
+  const router = useRouter();
+  const toggleLike = api.like.toggleLike.useMutation({
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
   return (
     <Card>
       {post.image_url && isSubscribed && (
@@ -63,6 +72,9 @@ const ProfilePost = ({ post, isSubscribed }: Props) => {
               <Button
                 variant="secondary"
                 className="flex items-center space-x-2"
+                onClick={() => {
+                  toggleLike.mutate({ postId: post.id });
+                }}
               >
                 <HeartIcon className="size-5 text-gray-500" />
                 <span className="text-gray-700">{post.like.length}</span>
