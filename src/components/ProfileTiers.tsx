@@ -1,4 +1,7 @@
+"use client";
+import { useRouter } from "next/navigation";
 import { RouterOutputs } from "../trpc/shared";
+import { createClient } from "../utils/supabase/client";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -15,6 +18,20 @@ type Props = {
 };
 
 const ProfileTiers = ({ profile }: Props) => {
+  const supabase = createClient();
+  const router = useRouter();
+  const handleJoin = async () => {
+    const { data: session } = await supabase.auth.getSession();
+    if (!session) {
+      router.push("/signup");
+    } else {
+      const response = await fetch(
+        `/api/checkout?creator_profile_id=${profile.id}`,
+      );
+      const data = await response.json();
+      router.push(data.url);
+    }
+  };
   return (
     <section className="pb-20 pt-10">
       <h2 className="mb-6 text-center text-2xl font-semibold">
@@ -26,7 +43,9 @@ const ProfileTiers = ({ profile }: Props) => {
           <CardDescription>$5/month</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button className="w-full">Join</Button>
+          <Button className="w-full" onClick={handleJoin}>
+            Join
+          </Button>
           <p>
             Get complete access o all text, media and video posts for just
             $5/month
