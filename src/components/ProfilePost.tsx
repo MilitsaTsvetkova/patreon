@@ -19,6 +19,8 @@ import {
 } from "./ui/card";
 import { api } from "../trpc/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ProfilePostComments from "./ProfilePostComments";
 
 type Props = {
   post: NonNullable<
@@ -28,6 +30,7 @@ type Props = {
 };
 
 const ProfilePost = ({ post, isSubscribed }: Props) => {
+  const [showComments, setShowComments] = useState(false);
   const router = useRouter();
   const toggleLike = api.like.toggleLike.useMutation({
     onSuccess: () => {
@@ -82,12 +85,14 @@ const ProfilePost = ({ post, isSubscribed }: Props) => {
               <Button
                 variant="secondary"
                 className="flex items-center space-x-2"
+                onClick={() => setShowComments(!showComments)}
               >
                 <MessageCircleIcon className="size-5 text-gray-500" />
                 <span className="text-gray-700">{post.comment.length}</span>
               </Button>
             </div>
           )}
+          {showComments && <ProfilePostComments post={post} />}
         </div>
       </CardFooter>
     </Card>
