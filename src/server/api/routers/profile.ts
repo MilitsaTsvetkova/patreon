@@ -20,6 +20,34 @@ export const profileRouter = createTRPCRouter({
       .order("created_at", { ascending: false });
     return { profile, subscriptions };
   }),
+  getProfileByUsername: publicProcedure
+    .input(z.object({ username: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const { data: profile } = await ctx.da
+        .from("profile")
+        .select("*,post(*,like(*),comment(*,profile(*)))")
+        .eq("username", input.username)
+        .order("created_at", { ascending: false, referencedTable: "post" })
+        .order("created_at", {
+          ascending: false,
+          referencedTable: "post.comment",
+        })
+        .single();
+      const { data: authProfile } = await ctx.da
+        .from("profile")
+        .select("*")
+        .eq("user_id", ctx.userId)
+        .single();
+      const { data: subscription } = await ctx.da
+        .from("subscription")
+        .select("*")
+        .eq("fan_profile_id", authProfile?.id!)
+        .eq("creator_profile_id", profile?.id!)
+        .eq("active", true)
+        .single();
+      const isSubscribed = !!subscription || profile?.user_id === ctx.userId;
+      return { profile, isSubscribed };
+    }),
 
   updateProfile: protectedProcedure
     .input(
