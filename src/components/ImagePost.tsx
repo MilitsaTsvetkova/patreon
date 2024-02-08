@@ -41,7 +41,7 @@ const ImagePost = () => {
   return (
     <div>
       {url ? (
-        <img src={url} className="pb-4" />
+        <img src={url} className="pb-4" alt="image" />
       ) : (
         <div className="mb-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-6 text-gray-500">
           <ImageIcon className="mb-4 size-12" />

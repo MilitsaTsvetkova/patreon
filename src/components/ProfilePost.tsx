@@ -40,7 +40,11 @@ const ProfilePost = ({ post, isSubscribed }: Props) => {
   return (
     <Card>
       {post.image_url && isSubscribed && (
-        <img className="w-full rounded-md bg-slate-300" src={post.image_url} />
+        <img
+          className="w-full rounded-md bg-slate-300"
+          src={post.image_url}
+          alt="profile post"
+        />
       )}
       {post.video_url && isSubscribed && (
         <video

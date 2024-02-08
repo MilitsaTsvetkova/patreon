@@ -11,7 +11,7 @@ const ProfileHeader = ({ profile }: Props) => {
   return (
     <header className="-mt-20 flex flex-col items-center">
       <ProfileAvatar
-        avatarUrl={profile.avatar_url}
+        avatarUrl={profile.avatar_url ?? undefined}
         username={profile.username}
       />
       <h1 className="text-4xl font-bold">{profile.name}</h1>

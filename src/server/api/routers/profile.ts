@@ -15,7 +15,7 @@ export const profileRouter = createTRPCRouter({
     const { data: subscriptions } = await ctx.da
       .from("subscription")
       .select("*,profile!subscription_creator_profile_id_fkey(*)")
-      .eq("fan_profile_id", profile?.id!)
+      .eq("fan_profile_id", profile?.id ?? "")
       .eq("active", true)
       .order("created_at", { ascending: false });
     return { profile, subscriptions };
@@ -26,7 +26,7 @@ export const profileRouter = createTRPCRouter({
       const { data: profile } = await ctx.da
         .from("profile")
         .select("*,post(*,like(*),comment(*,profile(*)))")
-        .eq("username", input.username)
+        .eq("username", input.username ?? "")
         .order("created_at", { ascending: false, referencedTable: "post" })
         .order("created_at", {
           ascending: false,
@@ -41,8 +41,8 @@ export const profileRouter = createTRPCRouter({
       const { data: subscription } = await ctx.da
         .from("subscription")
         .select("*")
-        .eq("fan_profile_id", authProfile?.id!)
-        .eq("creator_profile_id", profile?.id!)
+        .eq("fan_profile_id", authProfile?.id ?? "")
+        .eq("creator_profile_id", profile?.id ?? "")
         .eq("active", true)
         .single();
       const isSubscribed = !!subscription || profile?.user_id === ctx.userId;

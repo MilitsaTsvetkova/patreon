@@ -22,7 +22,11 @@ const CreatorPost = ({ post }: Props) => {
   return (
     <Card>
       {post.image_url && (
-        <img className="w-fill rounded-md bg-slate-300" src={post.image_url} />
+        <img
+          className="w-fill rounded-md bg-slate-300"
+          src={post.image_url}
+          alt="creator post"
+        />
       )}
       {post.video_url && (
         <video
